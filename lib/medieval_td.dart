@@ -1,14 +1,26 @@
+import 'dart:async';
+import 'dart:ui';
+
+import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 
 import 'tutorial.dart';
 
 class MedievalTD extends FlameGame {
-  late final RouterComponent router;
+  @override
+  Color backgroundColor() => const Color(0xFF85C769);
+
+  late final CameraComponent cam;
+  final world = Tutorial();
 
   @override
-  Future<void> onLoad() async {
-    add(router = RouterComponent(initialRoute: 'tutorial', routes: {
-      'tutorial': Route(Tutorial.new),
-    }));
+  FutureOr<void> onLoad() {
+    camera = CameraComponent.withFixedResolution(
+        world: world, width: 640, height: 360);
+
+    camera.viewfinder.anchor = Anchor.topLeft;
+
+    addAll([camera, world]);
+    return super.onLoad();
   }
 }
