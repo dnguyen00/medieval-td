@@ -1,11 +1,8 @@
 import 'dart:async';
 
 import 'package:flame/components.dart';
-import 'package:flame/events.dart';
 import 'package:flame/input.dart';
 import 'package:flame_tiled/flame_tiled.dart';
-import 'package:flutter/material.dart';
-import 'package:medieval_td/medieval_td.dart';
 
 class Tutorial extends World {
   late TiledComponent background;
