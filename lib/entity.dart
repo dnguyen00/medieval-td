@@ -17,15 +17,40 @@ class Entity extends SpriteAnimationGroupComponent with HasGameRef<MedievalTD> {
 
   void _loadAllAnimations() {
     final entityImage = game.images.fromCache("characters/warrior.png");
-
     final spriteSheet =
         SpriteSheet(image: entityImage, srcSize: Vector2.all(64));
 
-    idleAnimation = SpriteAnimation.fromFrameData(entityImage,
-        SpriteAnimationData([spriteSheet.createFrameData(0, 2, stepTime: .5)]));
+    const idleRow = 0;
+    const walkRow = 1;
+    const attackRow = 2;
+
+    idleAnimation = SpriteAnimation.fromFrameData(
+        entityImage,
+        SpriteAnimationData(
+            createAnimationFrames(spriteSheet, idleRow, 6, .1)));
+
+    walkAnimation = SpriteAnimation.fromFrameData(
+        entityImage,
+        SpriteAnimationData(
+            createAnimationFrames(spriteSheet, walkRow, 6, .1)));
+
+    attackAnimation = SpriteAnimation.fromFrameData(
+        entityImage,
+        SpriteAnimationData(
+            createAnimationFrames(spriteSheet, attackRow, 6, .1)));
 
     animations = {EntityState.idle: idleAnimation};
 
     current = EntityState.idle;
+  }
+
+  List<SpriteAnimationFrameData> createAnimationFrames(
+      SpriteSheet spriteSheet, int row, int columns, double stepTime) {
+    List<SpriteAnimationFrameData> frames = [];
+    for (int i = 0; i < columns; i++) {
+      frames.add(spriteSheet.createFrameData(row, i, stepTime: stepTime));
+    }
+
+    return frames;
   }
 }
