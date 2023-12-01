@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MyApp());
-}
+// void main() {
+//   runApp(MyApp());
+// }
 
 class MyApp extends StatelessWidget {
   @override
@@ -14,7 +14,6 @@ class MyApp extends StatelessWidget {
       home: MainScreen(),
     );
   }
-
 }
 
 class MainScreen extends StatelessWidget {
@@ -75,7 +74,8 @@ class MusicScreen extends StatelessWidget {
   @override
   //the actual music settings screen, very basic
   Widget build(BuildContext context) {
-    double volumeValue = 0.7; // Initial volume value, you can set it to your desired default
+    double volumeValue =
+        0.7; // Initial volume value, you can set it to your desired default
 
     return Scaffold(
       appBar: AppBar(
@@ -94,7 +94,8 @@ class MusicScreen extends StatelessWidget {
               },
             ),
             SizedBox(height: 16),
-            Text('Current Volume: ${volumeValue.toStringAsFixed(2)}'), // Display the current volume value
+            Text(
+                'Current Volume: ${volumeValue.toStringAsFixed(2)}'), // Display the current volume value
           ],
         ),
       ),
