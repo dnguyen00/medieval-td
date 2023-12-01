@@ -4,14 +4,14 @@ import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 
-import 'tutorial.dart';
+import 'level.dart';
 
 class MedievalTD extends FlameGame {
   @override
   Color backgroundColor() => const Color(0xFF85C769);
 
   late final CameraComponent cam;
-  final world = Tutorial();
+  final world = Level(levelName: "tutorial");
 
   @override
   FutureOr<void> onLoad() async {

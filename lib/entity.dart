@@ -8,6 +8,15 @@ enum EntityState { idle, walk, attack }
 
 class Entity extends SpriteAnimationGroupComponent with HasGameRef<MedievalTD> {
   late final SpriteAnimation idleAnimation, walkAnimation, attackAnimation;
+  String character;
+  List<int> animationIndex;
+  bool reversed;
+  Entity(
+      {position,
+      required this.character,
+      required this.animationIndex,
+      this.reversed = false})
+      : super(position: position);
 
   @override
   FutureOr<void> onLoad() {
@@ -16,7 +25,7 @@ class Entity extends SpriteAnimationGroupComponent with HasGameRef<MedievalTD> {
   }
 
   void _loadAllAnimations() {
-    final entityImage = game.images.fromCache("characters/warrior.png");
+    final entityImage = game.images.fromCache(character);
     final spriteSheet =
         SpriteSheet(image: entityImage, srcSize: Vector2.all(64));
 
