@@ -14,7 +14,9 @@ class MedievalTD extends FlameGame {
   final world = Tutorial();
 
   @override
-  FutureOr<void> onLoad() {
+  FutureOr<void> onLoad() async {
+    await images.load("characters/warrior.png");
+
     camera = CameraComponent.withFixedResolution(
         world: world, width: 640, height: 360);
 

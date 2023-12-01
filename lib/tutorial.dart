@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flame/components.dart';
 import 'package:flame/input.dart';
 import 'package:flame_tiled/flame_tiled.dart';
+import 'package:medieval_td/entity.dart';
 
 class Tutorial extends World {
   late TiledComponent background;
@@ -13,6 +14,7 @@ class Tutorial extends World {
         await TiledComponent.load("tutorial_background.tmx", Vector2.all(16));
 
     add(background);
+    add(Entity());
     return super.onLoad();
   }
 }
