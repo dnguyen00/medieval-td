@@ -54,3 +54,7 @@ class Entity extends SpriteAnimationGroupComponent with HasGameRef<MedievalTD> {
     return frames;
   }
 }
+
+// 16 margin
+// 32 spacing
+// 64x64
