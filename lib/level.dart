@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flame/components.dart';
 import 'package:flame/input.dart';
 import 'package:flame_tiled/flame_tiled.dart';
+import 'package:medieval_td/collisions.dart';
 import 'package:medieval_td/player.dart';
 
 class Level extends World {
@@ -10,6 +11,7 @@ class Level extends World {
   Level({required this.levelName});
 
   late TiledComponent level;
+  List<Collisions> collisionBlocks = [];
 
   @override
   FutureOr<void> onLoad() async {
@@ -27,6 +29,15 @@ class Level extends World {
           break;
         default:
       }
+    }
+
+    for (final collision
+        in level.tileMap.getLayer<ObjectGroup>("Collisions")!.objects) {
+      final block = Collisions(
+          position: Vector2(collision.x, collision.y),
+          size: Vector2(collision.width, collision.height));
+      collisionBlocks.add(block);
+      add(block);
     }
 
     return super.onLoad();
