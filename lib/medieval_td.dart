@@ -3,10 +3,11 @@ import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
+import 'package:flame/input.dart';
 
 import 'level.dart';
 
-class MedievalTD extends FlameGame {
+class MedievalTD extends FlameGame with HasKeyboardHandlerComponents {
   @override
   Color backgroundColor() => const Color(0xFF85C769);
 
