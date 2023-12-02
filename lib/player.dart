@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/src/services/keyboard_key.g.dart';
 import 'package:flutter/src/services/raw_keyboard.dart';
+import 'package:medieval_td/collisions.dart';
 import 'package:medieval_td/medieval_td.dart';
 
 enum PlayerState { idle, walk, attack }
@@ -31,17 +33,21 @@ class Player extends SpriteAnimationGroupComponent
       required this.character,
       required this.animationIndex,
       this.reversed = false})
-      : super(position: position);
+      : super(position: position) {
+    debugMode = true;
+  }
 
   PlayerDirection playerDirection = PlayerDirection.none;
   double speed = 100;
   Vector2 velocity = Vector2.zero();
   bool isFacingRight = true;
+  List<Collisions> collisionBlocks = [];
+  Hitbox hitbox = Hitbox(offsetX: 14, offsetY: 4, width: 40, height: 50);
 
   @override
   void update(double dt) {
     _updatePlayerMovement(dt);
-
+    _checkCollisions();
     super.update(dt);
   }
 
@@ -82,6 +88,9 @@ class Player extends SpriteAnimationGroupComponent
   @override
   FutureOr<void> onLoad() {
     _loadAllAnimations();
+    add(RectangleHitbox(
+        position: Vector2(hitbox.offsetX, hitbox.offsetY),
+        size: Vector2(hitbox.width, hitbox.height)));
     return super.onLoad();
   }
 
@@ -166,7 +175,6 @@ class Player extends SpriteAnimationGroupComponent
           flipHorizontallyAroundCenter();
           isFacingRight = false;
         }
-        //current = PlayerState.walk;
         dx -= speed;
         break;
       case PlayerDirection.right:
@@ -174,7 +182,6 @@ class Player extends SpriteAnimationGroupComponent
           flipHorizontallyAroundCenter();
           isFacingRight = true;
         }
-        //current = PlayerState.walk;
         dx += speed;
         break;
       case PlayerDirection.up:
@@ -184,7 +191,6 @@ class Player extends SpriteAnimationGroupComponent
         dy += speed;
         break;
       case PlayerDirection.none:
-        //current = PlayerState.idle;
         break;
       default:
     }
@@ -192,6 +198,45 @@ class Player extends SpriteAnimationGroupComponent
     velocity = Vector2(dx, dy);
     position += velocity * dt;
   }
+
+  void _checkCollisions() {
+    for (final block in collisionBlocks) {
+      if (checkCollision(this, block)) {
+        if (velocity.x > 0) {
+          velocity.x = 0;
+          position.x = block.x - width;
+        }
+
+        if (velocity.x < 0) {
+          velocity.x = 0;
+          position.x = block.x + block.width + width;
+        }
+
+        if (velocity.y > 0) {
+          velocity.y = 0;
+          position.y = block.y - width;
+        }
+
+        if (velocity.y < 0) {
+          velocity.y = 0;
+          position.y = block.y + block.height;
+        }
+      }
+    }
+  }
+}
+
+class Hitbox {
+  final double offsetX;
+  final double offsetY;
+  final double width;
+  final double height;
+
+  Hitbox(
+      {required this.offsetX,
+      required this.offsetY,
+      required this.width,
+      required this.height});
 }
 
 // 16 margin

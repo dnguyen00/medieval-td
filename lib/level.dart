@@ -19,13 +19,16 @@ class Level extends World {
 
     add(level);
 
+    late Player player;
+
     for (final spawn in level.tileMap.getLayer<ObjectGroup>("Spawn")!.objects) {
       switch (spawn.class_) {
         case "Player":
-          add(Player(
+          player = Player(
               character: "characters/warrior.png",
               animationIndex: [0, 6, 1, 6, 2, 6],
-              position: Vector2(spawn.x, spawn.y)));
+              position: Vector2(spawn.x, spawn.y));
+          add(player);
           break;
         default:
       }
@@ -39,6 +42,8 @@ class Level extends World {
       collisionBlocks.add(block);
       add(block);
     }
+
+    player.collisionBlocks = collisionBlocks;
 
     return super.onLoad();
   }
