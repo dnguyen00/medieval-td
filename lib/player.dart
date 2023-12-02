@@ -8,7 +8,17 @@ import 'package:medieval_td/medieval_td.dart';
 
 enum PlayerState { idle, walk, attack }
 
-enum PlayerDirection { left, right, up, down, none }
+enum PlayerDirection {
+  left,
+  right,
+  up,
+  down,
+  topright,
+  topleft,
+  downright,
+  downleft,
+  none
+}
 
 class Player extends SpriteAnimationGroupComponent
     with HasGameRef<MedievalTD>, KeyboardHandler {
@@ -42,7 +52,15 @@ class Player extends SpriteAnimationGroupComponent
     final isUpKey = keysPressed.contains(LogicalKeyboardKey.keyW);
     final isDownKey = keysPressed.contains(LogicalKeyboardKey.keyS);
 
-    if (isLeftKey) {
+    if (isLeftKey && isUpKey) {
+      playerDirection = PlayerDirection.topleft;
+    } else if (isRightKey && isUpKey) {
+      playerDirection = PlayerDirection.topright;
+    } else if (isLeftKey && isDownKey) {
+      playerDirection = PlayerDirection.downleft;
+    } else if (isRightKey && isDownKey) {
+      playerDirection = PlayerDirection.downright;
+    } else if (isLeftKey) {
       playerDirection = PlayerDirection.left;
     } else if (isRightKey) {
       playerDirection = PlayerDirection.right;
@@ -111,6 +129,38 @@ class Player extends SpriteAnimationGroupComponent
     double dy = 0;
 
     switch (playerDirection) {
+      case PlayerDirection.topleft:
+        if (isFacingRight) {
+          flipHorizontallyAroundCenter();
+          isFacingRight = false;
+        }
+        dx -= speed;
+        dy -= speed;
+        break;
+      case PlayerDirection.topright:
+        if (!isFacingRight) {
+          flipHorizontallyAroundCenter();
+          isFacingRight = true;
+        }
+        dx += speed;
+        dy -= speed;
+        break;
+      case PlayerDirection.downleft:
+        if (isFacingRight) {
+          flipHorizontallyAroundCenter();
+          isFacingRight = false;
+        }
+        dx -= speed;
+        dy += speed;
+        break;
+      case PlayerDirection.downright:
+        if (!isFacingRight) {
+          flipHorizontallyAroundCenter();
+          isFacingRight = true;
+        }
+        dx += speed;
+        dy += speed;
+        break;
       case PlayerDirection.left:
         if (isFacingRight) {
           flipHorizontallyAroundCenter();
@@ -128,11 +178,9 @@ class Player extends SpriteAnimationGroupComponent
         dx += speed;
         break;
       case PlayerDirection.up:
-        //current = PlayerState.walk;
         dy -= speed;
         break;
       case PlayerDirection.down:
-        //current = PlayerState.walk;
         dy += speed;
         break;
       case PlayerDirection.none:
