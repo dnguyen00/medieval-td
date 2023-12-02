@@ -19,7 +19,6 @@ class LevelSelect extends StatelessWidget {
 
 class LevelSelectionScreen extends StatelessWidget {
   final List<int> levels = List.generate(10, (index) => index + 1);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +33,7 @@ class LevelSelectionScreen extends StatelessWidget {
               'Choose a Level',
               style: TextStyle(fontSize: 24),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             Expanded(
               child: ListView.builder(
                 itemCount: levels.length,
@@ -46,8 +45,6 @@ class LevelSelectionScreen extends StatelessWidget {
                     ),
                     onTap: () {
                       // Handle level selection, e.g., navigate to the selected level
-                      // You can use Navigator to push a new screen or perform any other action
-                      // For now, let's print the selected level
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -60,6 +57,18 @@ class LevelSelectionScreen extends StatelessWidget {
                 },
               ),
             ),
+            ElevatedButton(
+              onPressed: () {
+                // Navigate to the tutorial screen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => GameWidget(game: MedievalTD())),
+                );
+              },
+              child: const Text('Tutorial'),
+            ),
+            const SizedBox(height: 20),
           ],
         ),
       ),

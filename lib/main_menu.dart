@@ -1,9 +1,14 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:medieval_td/levelSelect.dart';
+import 'package:medieval_td/shop.dart';
 
 //combine my_app.dart with this
+
+
 class MainMenu extends StatelessWidget {
+  const MainMenu({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,14 +38,26 @@ class MainMenu extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ShopScreen()),
+                );
+              },
+              child: const Text('Shop'),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
                 // Navigate to the settings screen
                 log('Go to settings');
               },
               child: const Text('Settings'),
-            )
+            ),
           ],
         ),
       ),
     );
   }
 }
+
+
