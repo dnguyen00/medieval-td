@@ -58,15 +58,7 @@ class Player extends SpriteAnimationGroupComponent
     final isUpKey = keysPressed.contains(LogicalKeyboardKey.keyW);
     final isDownKey = keysPressed.contains(LogicalKeyboardKey.keyS);
 
-    if (isLeftKey && isUpKey) {
-      playerDirection = PlayerDirection.topleft;
-    } else if (isRightKey && isUpKey) {
-      playerDirection = PlayerDirection.topright;
-    } else if (isLeftKey && isDownKey) {
-      playerDirection = PlayerDirection.downleft;
-    } else if (isRightKey && isDownKey) {
-      playerDirection = PlayerDirection.downright;
-    } else if (isLeftKey) {
+    if (isLeftKey) {
       playerDirection = PlayerDirection.left;
     } else if (isRightKey) {
       playerDirection = PlayerDirection.right;
