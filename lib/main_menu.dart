@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:medieval_td/levelSelect.dart';
 import 'package:medieval_td/shop.dart';
-
+import 'package:medieval_td/settings.dart';
 //combine my_app.dart with this
 
 
@@ -48,8 +48,11 @@ class MainMenu extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // Navigate to the settings screen
-                log('Go to settings');
+                // Navigate to the settings screen, created new dart file for settings :)
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SettingsScreen()),
+                );
               },
               child: const Text('Settings'),
             ),
@@ -59,5 +62,7 @@ class MainMenu extends StatelessWidget {
     );
   }
 }
+
+
 
 
