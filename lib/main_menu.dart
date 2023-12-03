@@ -1,10 +1,8 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:medieval_td/levelSelect.dart';
-import 'package:medieval_td/shop.dart';
 import 'package:medieval_td/settings.dart';
-//combine my_app.dart with this
-
+import 'package:medieval_td/shop.dart';
+//import 'package:medieval_td/settings.dart';
 
 class MainMenu extends StatelessWidget {
   const MainMenu({super.key});
@@ -62,7 +60,3 @@ class MainMenu extends StatelessWidget {
     );
   }
 }
-
-
-
-
