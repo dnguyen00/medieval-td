@@ -49,7 +49,7 @@ class LevelSelectionScreen extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                GameWidget(game: MedievalTD())),
+                                GameWidget(game: MedievalTD(levelCode: 0))),
                       );
                       log('Selected Level: ${levels[index]}');
                     },
@@ -63,7 +63,8 @@ class LevelSelectionScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => GameWidget(game: MedievalTD())),
+                      builder: (context) =>
+                          GameWidget(game: MedievalTD(levelCode: 0))),
                 );
               },
               child: const Text('Tutorial'),

@@ -5,6 +5,7 @@ import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
 import 'package:medieval_td/collisions.dart';
 import 'package:medieval_td/custom_hitbox.dart';
+import 'package:medieval_td/game_data.dart';
 import 'package:medieval_td/medieval_td.dart';
 
 enum EnemyState { idle, walk, attack }
@@ -37,6 +38,7 @@ class Enemy extends SpriteAnimationGroupComponent with HasGameRef<MedievalTD> {
 
   EnemyDirection enemyDirection = EnemyDirection.none;
   double speed = 100;
+  int health = 100;
   Vector2 velocity = Vector2.zero();
   bool isFacingRight = true;
   List<Collisions> collisionBlocks = [];
@@ -47,6 +49,7 @@ class Enemy extends SpriteAnimationGroupComponent with HasGameRef<MedievalTD> {
   @override
   void update(double dt) {
     _updateEnemyMovement(dt);
+    _checkIfAlive();
     _checkCollisions();
     _loadMovement();
     super.update(dt);
@@ -170,7 +173,14 @@ class Enemy extends SpriteAnimationGroupComponent with HasGameRef<MedievalTD> {
     for (final block in collisionBlocks) {
       if (checkCollision(this, block)) {
         if (block.name == "House") {
-          print("dead");
+          GameData.houseHealth -= 1;
+
+          if (GameData.houseHealth <= 0) {
+            GameData.data.score = 0;
+            GameData.data.moneyGained = 0;
+
+            print("game over here");
+          }
         }
 
         if (velocity.x > 0) {
@@ -217,6 +227,15 @@ class Enemy extends SpriteAnimationGroupComponent with HasGameRef<MedievalTD> {
       enemyDirection = EnemyDirection.right;
     } else {
       enemyDirection = EnemyDirection.none;
+    }
+  }
+
+  void _checkIfAlive() {
+    if (health <= 0) {
+      GameData.EnemyCount -= 1;
+      GameData.data.score += 1;
+      GameData.data.moneyGained += 5;
+      removeFromParent();
     }
   }
 }

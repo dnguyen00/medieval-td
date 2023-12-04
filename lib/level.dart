@@ -1,11 +1,13 @@
 import 'dart:async';
 
 import 'package:flame/components.dart';
+import 'package:flame/flame.dart';
 import 'package:flame/input.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 import 'package:medieval_td/arrow.dart';
 import 'package:medieval_td/collisions.dart';
 import 'package:medieval_td/enemy.dart';
+import 'package:medieval_td/game_data.dart';
 import 'package:medieval_td/level_settings.dart';
 import 'package:medieval_td/player.dart';
 
@@ -41,6 +43,7 @@ class Level extends World {
               character: "characters/torch.png",
               animationIndex: [0, 6, 1, 6, 2, 6],
               position: Vector2(spawn.x, spawn.y));
+          enemy.health = levelSettings.enemyHealth;
           enemy.speed = levelSettings.enemySpeed;
           enemies.add(enemy);
           break;
@@ -78,8 +81,16 @@ class Level extends World {
       add(enemy);
     }
 
+    player.enemies = enemies;
+
     add(player);
 
     return super.onLoad();
+  }
+
+  @override
+  void onRemove() {
+    removeAll(children);
+    super.onRemove();
   }
 }

@@ -8,5 +8,5 @@ void main() {
   Flame.device.fullScreen();
   Flame.device.setLandscape();
 
-  runApp(GameWidget(game: MedievalTD()));
+  runApp(GameWidget(game: MedievalTD(levelCode: 0)));
 }
