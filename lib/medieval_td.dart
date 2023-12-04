@@ -30,6 +30,26 @@ class MedievalTD extends FlameGame with HasKeyboardHandlerComponents {
         levelSettings:
             LevelSettings(enemyHealth: 1, enemySpeed: 50, houseHealth: 1000)));
 
+    levels.add(Level(
+        levelName: "level1",
+        levelSettings:
+            LevelSettings(enemyHealth: 50, enemySpeed: 70, houseHealth: 50)));
+
+    levels.add(Level(
+        levelName: "level2",
+        levelSettings:
+            LevelSettings(enemyHealth: 50, enemySpeed: 100, houseHealth: 100)));
+
+    levels.add(Level(
+        levelName: "level3",
+        levelSettings:
+            LevelSettings(enemyHealth: 50, enemySpeed: 100, houseHealth: 100)));
+
+    levels.add(Level(
+        levelName: "level4",
+        levelSettings: LevelSettings(
+            enemyHealth: 300, enemySpeed: 300, houseHealth: 1000)));
+
     final world = levels[levelCode];
     GameData.houseHealth = levels[levelCode].levelSettings.houseHealth;
 
