@@ -42,7 +42,6 @@ class Level extends World {
               position: Vector2(spawn.x, spawn.y));
           enemy.speed = levelSettings.enemySpeed;
           enemies.add(enemy);
-          add(enemy);
           break;
         default:
       }
@@ -54,7 +53,8 @@ class Level extends World {
         case "House":
           final block = Collisions(
               position: Vector2(collision.x, collision.y),
-              size: Vector2(collision.width, collision.height));
+              size: Vector2(collision.width, collision.height),
+              name: "House");
           collisionBlocks.add(block);
           house = block;
           add(block);
@@ -62,13 +62,22 @@ class Level extends World {
         default:
           final block = Collisions(
               position: Vector2(collision.x, collision.y),
-              size: Vector2(collision.width, collision.height));
+              size: Vector2(collision.width, collision.height),
+              name: "Block");
           collisionBlocks.add(block);
           add(block);
       }
     }
 
     player.collisionBlocks = collisionBlocks;
+
+    for (final enemy in enemies) {
+      enemy.collisionBlocks = collisionBlocks;
+      enemy.house = house;
+      add(enemy);
+    }
+
+    add(player);
 
     return super.onLoad();
   }

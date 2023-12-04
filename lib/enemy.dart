@@ -35,11 +35,12 @@ class Enemy extends SpriteAnimationGroupComponent with HasGameRef<MedievalTD> {
     debugMode = true;
   }
 
-  EnemyDirection playerDirection = EnemyDirection.none;
+  EnemyDirection enemyDirection = EnemyDirection.none;
   double speed = 100;
   Vector2 velocity = Vector2.zero();
   bool isFacingRight = true;
   List<Collisions> collisionBlocks = [];
+  late Collisions house;
   CustomHitbox hitbox =
       CustomHitbox(offsetX: 14, offsetY: 4, width: 40, height: 50);
 
@@ -47,6 +48,7 @@ class Enemy extends SpriteAnimationGroupComponent with HasGameRef<MedievalTD> {
   void update(double dt) {
     _updateEnemyMovement(dt);
     _checkCollisions();
+    _loadMovement();
     super.update(dt);
   }
 
@@ -102,7 +104,7 @@ class Enemy extends SpriteAnimationGroupComponent with HasGameRef<MedievalTD> {
     double dx = 0;
     double dy = 0;
 
-    switch (playerDirection) {
+    switch (enemyDirection) {
       case EnemyDirection.topleft:
         if (isFacingRight) {
           flipHorizontallyAroundCenter();
@@ -167,6 +169,10 @@ class Enemy extends SpriteAnimationGroupComponent with HasGameRef<MedievalTD> {
   void _checkCollisions() {
     for (final block in collisionBlocks) {
       if (checkCollision(this, block)) {
+        if (block.name == "House") {
+          print("dead");
+        }
+
         if (velocity.x > 0) {
           velocity.x = 0;
           position.x = block.x - width;
@@ -187,6 +193,30 @@ class Enemy extends SpriteAnimationGroupComponent with HasGameRef<MedievalTD> {
           position.y = block.y + block.height;
         }
       }
+    }
+  }
+
+  bool stopVertical = false;
+  bool stopHorizontal = false;
+
+  void _loadMovement() {
+    Vector2 houseCenter = house.absoluteCenter;
+
+    if (absoluteCenter.y - 5 < houseCenter.y &&
+        absoluteCenter.y + 5 > houseCenter.y &&
+        !stopVertical) {
+      stopVertical = true;
+      enemyDirection = EnemyDirection.none;
+    } else if (absoluteCenter.y > houseCenter.y && !stopVertical) {
+      enemyDirection = EnemyDirection.up;
+    } else if (absoluteCenter.y < houseCenter.y && !stopVertical) {
+      enemyDirection = EnemyDirection.down;
+    } else if (absoluteCenter.x > houseCenter.x) {
+      enemyDirection = EnemyDirection.left;
+    } else if (absoluteCenter.x < houseCenter.x) {
+      enemyDirection = EnemyDirection.right;
+    } else {
+      enemyDirection = EnemyDirection.none;
     }
   }
 }

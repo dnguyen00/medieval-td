@@ -31,7 +31,7 @@
  </layer>
  <objectgroup id="3" name="Spawn">
   <object id="2" name="Player" type="Player" x="32.6667" y="192" width="64.67" height="64.33"/>
-  <object id="12" name="Enemy" type="Enemy" x="544" y="112" width="64" height="64"/>
+  <object id="12" name="Enemy" type="Enemy" x="544" y="240" width="64" height="64"/>
  </objectgroup>
  <objectgroup id="4" name="Collisions">
   <object id="6" x="0" y="0" width="16" height="368"/>
