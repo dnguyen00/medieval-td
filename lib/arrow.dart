@@ -3,15 +3,13 @@ import 'dart:async';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
-import 'package:flutter/src/services/keyboard_key.g.dart';
-import 'package:flutter/src/services/raw_keyboard.dart';
 import 'package:medieval_td/collisions.dart';
 import 'package:medieval_td/custom_hitbox.dart';
 import 'package:medieval_td/medieval_td.dart';
 
-enum PlayerState { idle, walk, attack }
+enum ArrowState { idle, walk, attack }
 
-enum PlayerDirection {
+enum ArrowDirection {
   left,
   right,
   up,
@@ -23,13 +21,12 @@ enum PlayerDirection {
   none
 }
 
-class Player extends SpriteAnimationGroupComponent
-    with HasGameRef<MedievalTD>, KeyboardHandler {
+class Arrow extends SpriteAnimationGroupComponent with HasGameRef<MedievalTD> {
   late final SpriteAnimation idleAnimation, walkAnimation, attackAnimation;
   String character;
   List<int> animationIndex;
   bool reversed;
-  Player(
+  Arrow(
       {position,
       required this.character,
       required this.animationIndex,
@@ -38,7 +35,7 @@ class Player extends SpriteAnimationGroupComponent
     debugMode = true;
   }
 
-  PlayerDirection playerDirection = PlayerDirection.none;
+  ArrowDirection arrowDirection = ArrowDirection.none;
   double speed = 100;
   Vector2 velocity = Vector2.zero();
   bool isFacingRight = true;
@@ -48,35 +45,9 @@ class Player extends SpriteAnimationGroupComponent
 
   @override
   void update(double dt) {
-    _updatePlayerMovement(dt);
+    _updateArrowMovement(dt);
     _checkCollisions();
     super.update(dt);
-  }
-
-  @override
-  bool onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
-    final isLeftKey = keysPressed.contains(LogicalKeyboardKey.keyA);
-    final isRightKey = keysPressed.contains(LogicalKeyboardKey.keyD);
-    final isUpKey = keysPressed.contains(LogicalKeyboardKey.keyW);
-    final isDownKey = keysPressed.contains(LogicalKeyboardKey.keyS);
-
-    if (isLeftKey) {
-      playerDirection = PlayerDirection.left;
-    } else if (isRightKey) {
-      playerDirection = PlayerDirection.right;
-    } else if (isUpKey) {
-      playerDirection = PlayerDirection.up;
-    } else if (isDownKey) {
-      playerDirection = PlayerDirection.down;
-    } else if (isUpKey && isDownKey) {
-      playerDirection = PlayerDirection.none;
-    } else if (isRightKey && isLeftKey) {
-      playerDirection = PlayerDirection.none;
-    } else {
-      playerDirection = PlayerDirection.none;
-    }
-
-    return super.onKeyEvent(event, keysPressed);
   }
 
   @override
@@ -100,7 +71,7 @@ class Player extends SpriteAnimationGroupComponent
     idleAnimation = SpriteAnimation.fromFrameData(
         entityImage,
         SpriteAnimationData(
-            createAnimationFrames(spriteSheet, idleRow, 6, .1)));
+            createAnimationFrames(spriteSheet, idleRow, 7, .1)));
 
     walkAnimation = SpriteAnimation.fromFrameData(
         entityImage,
@@ -112,9 +83,9 @@ class Player extends SpriteAnimationGroupComponent
         SpriteAnimationData(
             createAnimationFrames(spriteSheet, attackRow, 6, .1)));
 
-    animations = {PlayerState.idle: idleAnimation};
+    animations = {ArrowState.idle: idleAnimation};
 
-    current = PlayerState.idle;
+    current = ArrowState.idle;
   }
 
   List<SpriteAnimationFrameData> createAnimationFrames(
@@ -127,12 +98,12 @@ class Player extends SpriteAnimationGroupComponent
     return frames;
   }
 
-  void _updatePlayerMovement(double dt) {
+  void _updateArrowMovement(double dt) {
     double dx = 0;
     double dy = 0;
 
-    switch (playerDirection) {
-      case PlayerDirection.topleft:
+    switch (arrowDirection) {
+      case ArrowDirection.topleft:
         if (isFacingRight) {
           flipHorizontallyAroundCenter();
           isFacingRight = false;
@@ -140,7 +111,7 @@ class Player extends SpriteAnimationGroupComponent
         dx -= speed;
         dy -= speed;
         break;
-      case PlayerDirection.topright:
+      case ArrowDirection.topright:
         if (!isFacingRight) {
           flipHorizontallyAroundCenter();
           isFacingRight = true;
@@ -148,7 +119,7 @@ class Player extends SpriteAnimationGroupComponent
         dx += speed;
         dy -= speed;
         break;
-      case PlayerDirection.downleft:
+      case ArrowDirection.downleft:
         if (isFacingRight) {
           flipHorizontallyAroundCenter();
           isFacingRight = false;
@@ -156,7 +127,7 @@ class Player extends SpriteAnimationGroupComponent
         dx -= speed;
         dy += speed;
         break;
-      case PlayerDirection.downright:
+      case ArrowDirection.downright:
         if (!isFacingRight) {
           flipHorizontallyAroundCenter();
           isFacingRight = true;
@@ -164,27 +135,27 @@ class Player extends SpriteAnimationGroupComponent
         dx += speed;
         dy += speed;
         break;
-      case PlayerDirection.left:
+      case ArrowDirection.left:
         if (isFacingRight) {
           flipHorizontallyAroundCenter();
           isFacingRight = false;
         }
         dx -= speed;
         break;
-      case PlayerDirection.right:
+      case ArrowDirection.right:
         if (!isFacingRight) {
           flipHorizontallyAroundCenter();
           isFacingRight = true;
         }
         dx += speed;
         break;
-      case PlayerDirection.up:
+      case ArrowDirection.up:
         dy -= speed;
         break;
-      case PlayerDirection.down:
+      case ArrowDirection.down:
         dy += speed;
         break;
-      case PlayerDirection.none:
+      case ArrowDirection.none:
         break;
       default:
     }
@@ -219,3 +190,6 @@ class Player extends SpriteAnimationGroupComponent
     }
   }
 }
+// 16 margin
+// 32 spacing
+// 64x64

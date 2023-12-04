@@ -1,7 +1,9 @@
 import 'package:flame/components.dart';
 
 class Collisions extends PositionComponent {
-  Collisions({position, size}) : super(position: position, size: size) {
+  String name;
+  Collisions({position, size, required this.name})
+      : super(position: position, size: size) {
     debugMode = true;
   }
 }

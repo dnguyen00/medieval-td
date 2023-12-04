@@ -3,15 +3,13 @@ import 'dart:async';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
-import 'package:flutter/src/services/keyboard_key.g.dart';
-import 'package:flutter/src/services/raw_keyboard.dart';
 import 'package:medieval_td/collisions.dart';
 import 'package:medieval_td/custom_hitbox.dart';
 import 'package:medieval_td/medieval_td.dart';
 
-enum PlayerState { idle, walk, attack }
+enum EnemyState { idle, walk, attack }
 
-enum PlayerDirection {
+enum EnemyDirection {
   left,
   right,
   up,
@@ -23,13 +21,12 @@ enum PlayerDirection {
   none
 }
 
-class Player extends SpriteAnimationGroupComponent
-    with HasGameRef<MedievalTD>, KeyboardHandler {
+class Enemy extends SpriteAnimationGroupComponent with HasGameRef<MedievalTD> {
   late final SpriteAnimation idleAnimation, walkAnimation, attackAnimation;
   String character;
   List<int> animationIndex;
   bool reversed;
-  Player(
+  Enemy(
       {position,
       required this.character,
       required this.animationIndex,
@@ -38,45 +35,21 @@ class Player extends SpriteAnimationGroupComponent
     debugMode = true;
   }
 
-  PlayerDirection playerDirection = PlayerDirection.none;
+  EnemyDirection enemyDirection = EnemyDirection.none;
   double speed = 100;
   Vector2 velocity = Vector2.zero();
   bool isFacingRight = true;
   List<Collisions> collisionBlocks = [];
+  late Collisions house;
   CustomHitbox hitbox =
       CustomHitbox(offsetX: 14, offsetY: 4, width: 40, height: 50);
 
   @override
   void update(double dt) {
-    _updatePlayerMovement(dt);
+    _updateEnemyMovement(dt);
     _checkCollisions();
+    _loadMovement();
     super.update(dt);
-  }
-
-  @override
-  bool onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
-    final isLeftKey = keysPressed.contains(LogicalKeyboardKey.keyA);
-    final isRightKey = keysPressed.contains(LogicalKeyboardKey.keyD);
-    final isUpKey = keysPressed.contains(LogicalKeyboardKey.keyW);
-    final isDownKey = keysPressed.contains(LogicalKeyboardKey.keyS);
-
-    if (isLeftKey) {
-      playerDirection = PlayerDirection.left;
-    } else if (isRightKey) {
-      playerDirection = PlayerDirection.right;
-    } else if (isUpKey) {
-      playerDirection = PlayerDirection.up;
-    } else if (isDownKey) {
-      playerDirection = PlayerDirection.down;
-    } else if (isUpKey && isDownKey) {
-      playerDirection = PlayerDirection.none;
-    } else if (isRightKey && isLeftKey) {
-      playerDirection = PlayerDirection.none;
-    } else {
-      playerDirection = PlayerDirection.none;
-    }
-
-    return super.onKeyEvent(event, keysPressed);
   }
 
   @override
@@ -100,7 +73,7 @@ class Player extends SpriteAnimationGroupComponent
     idleAnimation = SpriteAnimation.fromFrameData(
         entityImage,
         SpriteAnimationData(
-            createAnimationFrames(spriteSheet, idleRow, 6, .1)));
+            createAnimationFrames(spriteSheet, idleRow, 7, .1)));
 
     walkAnimation = SpriteAnimation.fromFrameData(
         entityImage,
@@ -112,9 +85,9 @@ class Player extends SpriteAnimationGroupComponent
         SpriteAnimationData(
             createAnimationFrames(spriteSheet, attackRow, 6, .1)));
 
-    animations = {PlayerState.idle: idleAnimation};
+    animations = {EnemyState.idle: idleAnimation};
 
-    current = PlayerState.idle;
+    current = EnemyState.idle;
   }
 
   List<SpriteAnimationFrameData> createAnimationFrames(
@@ -127,12 +100,12 @@ class Player extends SpriteAnimationGroupComponent
     return frames;
   }
 
-  void _updatePlayerMovement(double dt) {
+  void _updateEnemyMovement(double dt) {
     double dx = 0;
     double dy = 0;
 
-    switch (playerDirection) {
-      case PlayerDirection.topleft:
+    switch (enemyDirection) {
+      case EnemyDirection.topleft:
         if (isFacingRight) {
           flipHorizontallyAroundCenter();
           isFacingRight = false;
@@ -140,7 +113,7 @@ class Player extends SpriteAnimationGroupComponent
         dx -= speed;
         dy -= speed;
         break;
-      case PlayerDirection.topright:
+      case EnemyDirection.topright:
         if (!isFacingRight) {
           flipHorizontallyAroundCenter();
           isFacingRight = true;
@@ -148,7 +121,7 @@ class Player extends SpriteAnimationGroupComponent
         dx += speed;
         dy -= speed;
         break;
-      case PlayerDirection.downleft:
+      case EnemyDirection.downleft:
         if (isFacingRight) {
           flipHorizontallyAroundCenter();
           isFacingRight = false;
@@ -156,7 +129,7 @@ class Player extends SpriteAnimationGroupComponent
         dx -= speed;
         dy += speed;
         break;
-      case PlayerDirection.downright:
+      case EnemyDirection.downright:
         if (!isFacingRight) {
           flipHorizontallyAroundCenter();
           isFacingRight = true;
@@ -164,27 +137,27 @@ class Player extends SpriteAnimationGroupComponent
         dx += speed;
         dy += speed;
         break;
-      case PlayerDirection.left:
+      case EnemyDirection.left:
         if (isFacingRight) {
           flipHorizontallyAroundCenter();
           isFacingRight = false;
         }
         dx -= speed;
         break;
-      case PlayerDirection.right:
+      case EnemyDirection.right:
         if (!isFacingRight) {
           flipHorizontallyAroundCenter();
           isFacingRight = true;
         }
         dx += speed;
         break;
-      case PlayerDirection.up:
+      case EnemyDirection.up:
         dy -= speed;
         break;
-      case PlayerDirection.down:
+      case EnemyDirection.down:
         dy += speed;
         break;
-      case PlayerDirection.none:
+      case EnemyDirection.none:
         break;
       default:
     }
@@ -196,6 +169,10 @@ class Player extends SpriteAnimationGroupComponent
   void _checkCollisions() {
     for (final block in collisionBlocks) {
       if (checkCollision(this, block)) {
+        if (block.name == "House") {
+          print("dead");
+        }
+
         if (velocity.x > 0) {
           velocity.x = 0;
           position.x = block.x - width;
@@ -218,4 +195,32 @@ class Player extends SpriteAnimationGroupComponent
       }
     }
   }
+
+  bool stopVertical = false;
+  bool stopHorizontal = false;
+
+  void _loadMovement() {
+    Vector2 houseCenter = house.absoluteCenter;
+
+    if (absoluteCenter.y - 5 < houseCenter.y &&
+        absoluteCenter.y + 5 > houseCenter.y &&
+        !stopVertical) {
+      stopVertical = true;
+      enemyDirection = EnemyDirection.none;
+    } else if (absoluteCenter.y > houseCenter.y && !stopVertical) {
+      enemyDirection = EnemyDirection.up;
+    } else if (absoluteCenter.y < houseCenter.y && !stopVertical) {
+      enemyDirection = EnemyDirection.down;
+    } else if (absoluteCenter.x > houseCenter.x) {
+      enemyDirection = EnemyDirection.left;
+    } else if (absoluteCenter.x < houseCenter.x) {
+      enemyDirection = EnemyDirection.right;
+    } else {
+      enemyDirection = EnemyDirection.none;
+    }
+  }
 }
+
+// 16 margin
+// 32 spacing
+// 64x64
