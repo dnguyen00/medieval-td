@@ -9,6 +9,7 @@ import 'package:medieval_td/arrow.dart';
 import 'package:medieval_td/collisions.dart';
 import 'package:medieval_td/custom_hitbox.dart';
 import 'package:medieval_td/enemy.dart';
+import 'package:medieval_td/game_data.dart';
 import 'package:medieval_td/medieval_td.dart';
 
 enum PlayerState { idle, walk, attack }
@@ -42,7 +43,7 @@ class Player extends SpriteAnimationGroupComponent
 
   List<Enemy> enemies = [];
   PlayerDirection playerDirection = PlayerDirection.none;
-  double speed = 100;
+  double speed = GameData.playerSpeed;
   Vector2 velocity = Vector2.zero();
   bool isFacingRight = true;
   List<Collisions> collisionBlocks = [];

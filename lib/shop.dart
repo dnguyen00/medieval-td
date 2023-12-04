@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medieval_td/game_data.dart';
 
 class shopScreen extends StatelessWidget {
   const shopScreen({super.key});
@@ -23,7 +24,7 @@ class ShopScreen extends StatefulWidget {
 }
 
 class _ShopScreenState extends State<ShopScreen> {
-  int coins = 100; // Initial in-game currency
+  int coins = GameData.money; // Initial in-game currency
   Character character = CharacterManager.character;
   List<Item> items = [
     Item(
@@ -114,6 +115,7 @@ class _ShopScreenState extends State<ShopScreen> {
         character.equipGoldenBow();
       }
       CharacterManager.updateCharacter(character);
+      GameData.money = coins;
     });
   }
 }
@@ -170,14 +172,17 @@ class Character {
 
   void equipSteelChestplate() {
     armor = 'Steel Chestplate';
+    GameData.houseHealth = GameData.houseHealth + 10;
   }
 
   void equipArcherCloak() {
     hat = 'Archer\'s Cloak';
+    GameData.houseHealth = GameData.houseHealth + 10;
   }
 
   void equipGoldenBow() {
     bow = 'Golden Bow';
+    GameData.playerSpeed = GameData.playerSpeed + 50;
   }
 
   @override
