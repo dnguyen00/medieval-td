@@ -21,6 +21,7 @@ class MedievalTD extends FlameGame with HasKeyboardHandlerComponents {
   FutureOr<void> onLoad() async {
     await images.load("characters/warrior.png");
     await images.load("characters/torch.png");
+    await images.load("Arrows_pack.png");
 
     camera = CameraComponent.withFixedResolution(
         world: world, width: 640, height: 360);

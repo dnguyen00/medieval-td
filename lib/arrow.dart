@@ -62,26 +62,14 @@ class Arrow extends SpriteAnimationGroupComponent with HasGameRef<MedievalTD> {
   void _loadAllAnimations() {
     final entityImage = game.images.fromCache(character);
     final spriteSheet =
-        SpriteSheet(image: entityImage, srcSize: Vector2.all(64));
+        SpriteSheet(image: entityImage, srcSize: Vector2.all(32));
 
     const idleRow = 0;
-    const walkRow = 1;
-    const attackRow = 2;
 
     idleAnimation = SpriteAnimation.fromFrameData(
         entityImage,
         SpriteAnimationData(
-            createAnimationFrames(spriteSheet, idleRow, 7, .1)));
-
-    walkAnimation = SpriteAnimation.fromFrameData(
-        entityImage,
-        SpriteAnimationData(
-            createAnimationFrames(spriteSheet, walkRow, 6, .1)));
-
-    attackAnimation = SpriteAnimation.fromFrameData(
-        entityImage,
-        SpriteAnimationData(
-            createAnimationFrames(spriteSheet, attackRow, 6, .1)));
+            createAnimationFrames(spriteSheet, idleRow, 3, .1)));
 
     animations = {ArrowState.idle: idleAnimation};
 

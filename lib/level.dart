@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flame/components.dart';
 import 'package:flame/input.dart';
 import 'package:flame_tiled/flame_tiled.dart';
+import 'package:medieval_td/arrow.dart';
 import 'package:medieval_td/collisions.dart';
 import 'package:medieval_td/enemy.dart';
 import 'package:medieval_td/level_settings.dart';
