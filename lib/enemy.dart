@@ -174,13 +174,6 @@ class Enemy extends SpriteAnimationGroupComponent with HasGameRef<MedievalTD> {
       if (checkCollision(this, block)) {
         if (block.name == "House") {
           GameData.houseHealth -= 1;
-
-          if (GameData.houseHealth <= 0) {
-            GameData.data.score = 0;
-            GameData.data.moneyGained = 0;
-
-            print("game over here");
-          }
         }
 
         if (velocity.x > 0) {
@@ -233,8 +226,8 @@ class Enemy extends SpriteAnimationGroupComponent with HasGameRef<MedievalTD> {
   void _checkIfAlive() {
     if (health <= 0) {
       GameData.EnemyCount -= 1;
-      GameData.data.score += 1;
-      GameData.data.moneyGained += 5;
+      GameData.data.score += 500;
+      GameData.data.moneyGained += 100;
       removeFromParent();
     }
   }

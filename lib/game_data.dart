@@ -11,12 +11,4 @@ class GameOverData {
   int moneyGained = 0;
 
   GameOverData({required this.score, required this.moneyGained});
-
-  int getScore() {
-    return score;
-  }
-
-  int getMoneyGained() {
-    return moneyGained;
-  }
 }

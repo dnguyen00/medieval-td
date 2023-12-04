@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:medieval_td/game_data.dart';
 import 'package:medieval_td/levelSelect.dart';
 import 'package:medieval_td/main_menu.dart';
 import 'package:medieval_td/medieval_td.dart';
-
-
 
 class Gameover extends StatelessWidget {
   @override
@@ -17,6 +16,8 @@ class Gameover extends StatelessWidget {
 class GameOverPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    int score = GameData.data.score;
+    int moneyGained = GameData.data.moneyGained;
     return Scaffold(
       appBar: AppBar(
         title: Text('Game Over'),
@@ -31,12 +32,12 @@ class GameOverPage extends StatelessWidget {
             ),
             SizedBox(height: 20),
             Text(
-              'Score: 100', // Replace with the actual score value
+              "Score: $score", // Replace with the actual score value
               style: TextStyle(fontSize: 18),
             ),
             SizedBox(height: 10),
             Text(
-              'Money Gained: \$50', // Replace with the actual money gained value
+              "Money Gained: $moneyGained", // Replace with the actual money gained value
               style: TextStyle(fontSize: 18),
             ),
             SizedBox(height: 20),
@@ -59,7 +60,8 @@ class GameOverPage extends StatelessWidget {
                 // Navigate to the game screen
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => LevelSelectionScreen()),
+                  MaterialPageRoute(
+                      builder: (context) => LevelSelectionScreen()),
                 );
               },
               style: ElevatedButton.styleFrom(

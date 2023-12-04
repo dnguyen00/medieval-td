@@ -87,10 +87,4 @@ class Level extends World {
 
     return super.onLoad();
   }
-
-  @override
-  void onRemove() {
-    removeAll(children);
-    super.onRemove();
-  }
 }

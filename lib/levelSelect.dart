@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:medieval_td/game_data.dart';
 import 'package:medieval_td/medieval_td.dart';
 
 class LevelSelect extends StatelessWidget {
@@ -18,7 +19,7 @@ class LevelSelect extends StatelessWidget {
 }
 
 class LevelSelectionScreen extends StatelessWidget {
-  final List<int> levels = List.generate(10, (index) => index + 1);
+  final List<int> levels = List.generate(4, (index) => index + 1);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,13 +46,10 @@ class LevelSelectionScreen extends StatelessWidget {
                     ),
                     onTap: () {
                       // Handle level selection, e.g., navigate to the selected level
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                GameWidget(game: MedievalTD(levelCode: 0))),
-                      );
-                      log('Selected Level: ${levels[index]}');
+                      runApp(GameWidget(
+                          game: MedievalTD(levelCode: levels[index])));
+                      GameData.data.moneyGained = 0;
+                      GameData.data.score = 0;
                     },
                   );
                 },
@@ -60,12 +58,9 @@ class LevelSelectionScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 // Navigate to the tutorial screen
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          GameWidget(game: MedievalTD(levelCode: 0))),
-                );
+                runApp(GameWidget(game: MedievalTD(levelCode: 0)));
+                GameData.data.moneyGained = 0;
+                GameData.data.score = 0;
               },
               child: const Text('Tutorial'),
             ),
