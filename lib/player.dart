@@ -43,7 +43,7 @@ class Player extends SpriteAnimationGroupComponent
 
   List<Enemy> enemies = [];
   PlayerDirection playerDirection = PlayerDirection.none;
-  double speed = 100;
+  double speed = GameData.playerSpeed;
   Vector2 velocity = Vector2.zero();
   bool isFacingRight = true;
   List<Collisions> collisionBlocks = [];
