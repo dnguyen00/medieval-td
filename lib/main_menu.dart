@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:medieval_td/levelSelect.dart';
 import 'package:medieval_td/settings.dart';
 import 'package:medieval_td/shop.dart';
-//import 'package:medieval_td/settings.dart';
 
 class MainMenu extends StatelessWidget {
   const MainMenu({super.key});

@@ -6,6 +6,7 @@ import 'package:flame/sprite.dart';
 import 'package:flutter/src/services/keyboard_key.g.dart';
 import 'package:flutter/src/services/raw_keyboard.dart';
 import 'package:medieval_td/collisions.dart';
+import 'package:medieval_td/custom_hitbox.dart';
 import 'package:medieval_td/medieval_td.dart';
 
 enum PlayerState { idle, walk, attack }
@@ -42,7 +43,8 @@ class Player extends SpriteAnimationGroupComponent
   Vector2 velocity = Vector2.zero();
   bool isFacingRight = true;
   List<Collisions> collisionBlocks = [];
-  Hitbox hitbox = Hitbox(offsetX: 14, offsetY: 4, width: 40, height: 50);
+  CustomHitbox hitbox =
+      CustomHitbox(offsetX: 14, offsetY: 4, width: 40, height: 50);
 
   @override
   void update(double dt) {
@@ -217,20 +219,3 @@ class Player extends SpriteAnimationGroupComponent
     }
   }
 }
-
-class Hitbox {
-  final double offsetX;
-  final double offsetY;
-  final double width;
-  final double height;
-
-  Hitbox(
-      {required this.offsetX,
-      required this.offsetY,
-      required this.width,
-      required this.height});
-}
-
-// 16 margin
-// 32 spacing
-// 64x64

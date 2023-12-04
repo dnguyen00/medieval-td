@@ -7,9 +7,9 @@ import 'package:medieval_td/collisions.dart';
 import 'package:medieval_td/custom_hitbox.dart';
 import 'package:medieval_td/medieval_td.dart';
 
-enum EnemyState { idle, walk, attack }
+enum ArrowState { idle, walk, attack }
 
-enum EnemyDirection {
+enum ArrowDirection {
   left,
   right,
   up,
@@ -21,12 +21,12 @@ enum EnemyDirection {
   none
 }
 
-class Enemy extends SpriteAnimationGroupComponent with HasGameRef<MedievalTD> {
+class Arrow extends SpriteAnimationGroupComponent with HasGameRef<MedievalTD> {
   late final SpriteAnimation idleAnimation, walkAnimation, attackAnimation;
   String character;
   List<int> animationIndex;
   bool reversed;
-  Enemy(
+  Arrow(
       {position,
       required this.character,
       required this.animationIndex,
@@ -35,7 +35,7 @@ class Enemy extends SpriteAnimationGroupComponent with HasGameRef<MedievalTD> {
     debugMode = true;
   }
 
-  EnemyDirection playerDirection = EnemyDirection.none;
+  ArrowDirection arrowDirection = ArrowDirection.none;
   double speed = 100;
   Vector2 velocity = Vector2.zero();
   bool isFacingRight = true;
@@ -45,7 +45,7 @@ class Enemy extends SpriteAnimationGroupComponent with HasGameRef<MedievalTD> {
 
   @override
   void update(double dt) {
-    _updateEnemyMovement(dt);
+    _updateArrowMovement(dt);
     _checkCollisions();
     super.update(dt);
   }
@@ -83,9 +83,9 @@ class Enemy extends SpriteAnimationGroupComponent with HasGameRef<MedievalTD> {
         SpriteAnimationData(
             createAnimationFrames(spriteSheet, attackRow, 6, .1)));
 
-    animations = {EnemyState.idle: idleAnimation};
+    animations = {ArrowState.idle: idleAnimation};
 
-    current = EnemyState.idle;
+    current = ArrowState.idle;
   }
 
   List<SpriteAnimationFrameData> createAnimationFrames(
@@ -98,12 +98,12 @@ class Enemy extends SpriteAnimationGroupComponent with HasGameRef<MedievalTD> {
     return frames;
   }
 
-  void _updateEnemyMovement(double dt) {
+  void _updateArrowMovement(double dt) {
     double dx = 0;
     double dy = 0;
 
-    switch (playerDirection) {
-      case EnemyDirection.topleft:
+    switch (arrowDirection) {
+      case ArrowDirection.topleft:
         if (isFacingRight) {
           flipHorizontallyAroundCenter();
           isFacingRight = false;
@@ -111,7 +111,7 @@ class Enemy extends SpriteAnimationGroupComponent with HasGameRef<MedievalTD> {
         dx -= speed;
         dy -= speed;
         break;
-      case EnemyDirection.topright:
+      case ArrowDirection.topright:
         if (!isFacingRight) {
           flipHorizontallyAroundCenter();
           isFacingRight = true;
@@ -119,7 +119,7 @@ class Enemy extends SpriteAnimationGroupComponent with HasGameRef<MedievalTD> {
         dx += speed;
         dy -= speed;
         break;
-      case EnemyDirection.downleft:
+      case ArrowDirection.downleft:
         if (isFacingRight) {
           flipHorizontallyAroundCenter();
           isFacingRight = false;
@@ -127,7 +127,7 @@ class Enemy extends SpriteAnimationGroupComponent with HasGameRef<MedievalTD> {
         dx -= speed;
         dy += speed;
         break;
-      case EnemyDirection.downright:
+      case ArrowDirection.downright:
         if (!isFacingRight) {
           flipHorizontallyAroundCenter();
           isFacingRight = true;
@@ -135,27 +135,27 @@ class Enemy extends SpriteAnimationGroupComponent with HasGameRef<MedievalTD> {
         dx += speed;
         dy += speed;
         break;
-      case EnemyDirection.left:
+      case ArrowDirection.left:
         if (isFacingRight) {
           flipHorizontallyAroundCenter();
           isFacingRight = false;
         }
         dx -= speed;
         break;
-      case EnemyDirection.right:
+      case ArrowDirection.right:
         if (!isFacingRight) {
           flipHorizontallyAroundCenter();
           isFacingRight = true;
         }
         dx += speed;
         break;
-      case EnemyDirection.up:
+      case ArrowDirection.up:
         dy -= speed;
         break;
-      case EnemyDirection.down:
+      case ArrowDirection.down:
         dy += speed;
         break;
-      case EnemyDirection.none:
+      case ArrowDirection.none:
         break;
       default:
     }
@@ -190,7 +190,6 @@ class Enemy extends SpriteAnimationGroupComponent with HasGameRef<MedievalTD> {
     }
   }
 }
-
 // 16 margin
 // 32 spacing
 // 64x64
