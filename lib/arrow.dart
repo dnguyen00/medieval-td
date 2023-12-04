@@ -5,6 +5,8 @@ import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
 import 'package:medieval_td/collisions.dart';
 import 'package:medieval_td/custom_hitbox.dart';
+import 'package:medieval_td/enemy.dart';
+import 'package:medieval_td/game_data.dart';
 import 'package:medieval_td/medieval_td.dart';
 
 enum ArrowState { idle, walk, attack }
@@ -25,12 +27,14 @@ class Arrow extends SpriteAnimationGroupComponent with HasGameRef<MedievalTD> {
   late final SpriteAnimation idleAnimation, walkAnimation, attackAnimation;
   String character;
   List<int> animationIndex;
-  bool reversed;
+  bool isRight;
+  List<Enemy> enemies;
   Arrow(
       {position,
       required this.character,
       required this.animationIndex,
-      this.reversed = false})
+      required this.isRight,
+      required this.enemies})
       : super(position: position) {
     debugMode = true;
   }
@@ -41,12 +45,13 @@ class Arrow extends SpriteAnimationGroupComponent with HasGameRef<MedievalTD> {
   bool isFacingRight = true;
   List<Collisions> collisionBlocks = [];
   CustomHitbox hitbox =
-      CustomHitbox(offsetX: 14, offsetY: 4, width: 40, height: 50);
+      CustomHitbox(offsetX: 4, offsetY: 7, width: 20, height: 15);
 
   @override
   void update(double dt) {
     _updateArrowMovement(dt);
     _checkCollisions();
+    _checkEnemyCollisions();
     super.update(dt);
   }
 
@@ -56,6 +61,12 @@ class Arrow extends SpriteAnimationGroupComponent with HasGameRef<MedievalTD> {
     add(RectangleHitbox(
         position: Vector2(hitbox.offsetX, hitbox.offsetY),
         size: Vector2(hitbox.width, hitbox.height)));
+
+    if (isRight) {
+      arrowDirection = ArrowDirection.right;
+    } else {
+      arrowDirection = ArrowDirection.left;
+    }
     return super.onLoad();
   }
 
@@ -154,26 +165,17 @@ class Arrow extends SpriteAnimationGroupComponent with HasGameRef<MedievalTD> {
 
   void _checkCollisions() {
     for (final block in collisionBlocks) {
-      if (checkCollision(this, block)) {
-        if (velocity.x > 0) {
-          velocity.x = 0;
-          position.x = block.x - width;
-        }
+      if (checkCollision(this, block) && block.name != "House") {
+        removeFromParent();
+      }
+    }
+  }
 
-        if (velocity.x < 0) {
-          velocity.x = 0;
-          position.x = block.x + block.width + width;
-        }
-
-        if (velocity.y > 0) {
-          velocity.y = 0;
-          position.y = block.y - width;
-        }
-
-        if (velocity.y < 0) {
-          velocity.y = 0;
-          position.y = block.y + block.height;
-        }
+  void _checkEnemyCollisions() {
+    for (final enemy in enemies) {
+      if (checkCollision(this, enemy)) {
+        enemy.health -= GameData.arrowDamage;
+        removeFromParent();
       }
     }
   }

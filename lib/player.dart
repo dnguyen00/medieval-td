@@ -5,8 +5,10 @@ import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/src/services/keyboard_key.g.dart';
 import 'package:flutter/src/services/raw_keyboard.dart';
+import 'package:medieval_td/arrow.dart';
 import 'package:medieval_td/collisions.dart';
 import 'package:medieval_td/custom_hitbox.dart';
+import 'package:medieval_td/enemy.dart';
 import 'package:medieval_td/medieval_td.dart';
 
 enum PlayerState { idle, walk, attack }
@@ -38,6 +40,7 @@ class Player extends SpriteAnimationGroupComponent
     debugMode = true;
   }
 
+  List<Enemy> enemies = [];
   PlayerDirection playerDirection = PlayerDirection.none;
   double speed = 100;
   Vector2 velocity = Vector2.zero();
@@ -59,6 +62,24 @@ class Player extends SpriteAnimationGroupComponent
     final isRightKey = keysPressed.contains(LogicalKeyboardKey.keyD);
     final isUpKey = keysPressed.contains(LogicalKeyboardKey.keyW);
     final isDownKey = keysPressed.contains(LogicalKeyboardKey.keyS);
+    final isFKey = keysPressed.contains(LogicalKeyboardKey.keyF);
+
+    if (isFKey) {
+      Arrow arrow = Arrow(
+          character: "Arrows_pack.png",
+          animationIndex: [],
+          position: Vector2(absoluteCenter.x, absoluteCenter.y),
+          isRight: true,
+          enemies: enemies);
+
+      arrow.collisionBlocks = collisionBlocks;
+
+      if (!isFacingRight) {
+        arrow.isRight = false;
+      }
+
+      parent?.add(arrow);
+    }
 
     if (isLeftKey) {
       playerDirection = PlayerDirection.left;
@@ -68,10 +89,6 @@ class Player extends SpriteAnimationGroupComponent
       playerDirection = PlayerDirection.up;
     } else if (isDownKey) {
       playerDirection = PlayerDirection.down;
-    } else if (isUpKey && isDownKey) {
-      playerDirection = PlayerDirection.none;
-    } else if (isRightKey && isLeftKey) {
-      playerDirection = PlayerDirection.none;
     } else {
       playerDirection = PlayerDirection.none;
     }
