@@ -172,17 +172,17 @@ class Character {
 
   void equipSteelChestplate() {
     armor = 'Steel Chestplate';
-    GameData.houseHealth = GameData.houseHealth + 10;
+    GameData.houseHealth += 100;
   }
 
   void equipArcherCloak() {
     hat = 'Archer\'s Cloak';
-    GameData.houseHealth = GameData.houseHealth + 10;
+    GameData.playerSpeed += 50;
   }
 
   void equipGoldenBow() {
     bow = 'Golden Bow';
-    GameData.playerSpeed = GameData.playerSpeed + 50;
+    GameData.arrowDamage += 50;
   }
 
   @override
